@@ -28,6 +28,23 @@ weather_df <- rnoaa::meteo_pull_monitors(
   select(name, id, everything())
 ```
 
-```{r}
+```{r bootstrap}
+# define function
+bootstrap_sample <- function(df) {
+  sample_frac(df, replace = TRUE)
+}
 
+# bootstrapping, 5000 samples with replacement
+results_p1 <- 
+  tibble(bootstrap_id = 1:5000) %>%
+  mutate(
+    bootstrap_sample = map(bootstrap_id, ~ bootstrap_sample(weather_df)),
+    bootstrap_model = map(bootstrap_sample, ~ lm(tmax ~ tmin, data = .x)),
+    # extract r-squared and compute log(beta0 * beta1)
+    r_squared = map_dbl(bootstrap_model, ~ glance(.x)$r.squared),
+    log_beta = map_dbl(bootstrap_model, ~ {
+      coefs <- tidy(.x)
+      log(coefs$estimate[1] * coefs$estimate[2])
+    })
+  )
 ```
