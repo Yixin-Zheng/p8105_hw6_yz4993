@@ -87,3 +87,18 @@ log_beta_plot <-
 r_squared_plot
 log_beta_plot
 ```
+
+# Problem 2
+```{r data import and clean}
+homicide_data <- read_csv("~/Desktop/Data Science/HW/HW6/p8105_hw6_yz4993/data/homicide-data.csv") %>%
+  janitor::clean_names() %>%
+  mutate(city_state = str_c(city, state, sep = ", "),
+         resolved_case = if_else(disposition == "Closed by arrest", 1, 0),
+         victim_age = as.numeric(victim_age)) %>%
+  filter(!city_state %in% c("Dallas, TX", 
+                            "Phoenix, AZ", 
+                            "Kansas City, MO", 
+                            "Tulsa, AL")) %>%
+  filter(victim_race %in% c("White", "Black")) %>%
+  drop_na(victim_race, victim_sex, victim_age)
+```
