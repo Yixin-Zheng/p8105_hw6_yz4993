@@ -57,11 +57,17 @@ ci_log_beta <- results_p1 %>%
   summarize(ci_low = quantile(log_beta, 0.025), 
             ci_high = quantile(log_beta, 0.975))
 
+ci_r_squared %>% 
+  mutate(parameter = "R-squared") %>%
+  bind_rows(ci_log_beta %>% mutate(parameter = "log(beta_hat_0 * beta_hat_1)")) %>%
+  select(parameter, ci_low, ci_high) %>%
+  knitr::kable(digits = 3, col.names = c("Parameter", "2.5% Quantile", "97.5% Quantile"))
+
 # plot distributions
 r_squared_plot <- 
   results_p1 %>%
   ggplot(aes(x = r_squared)) +
-  geom_histogram(binwidth = 0.01, fill = "aliceblue", alpha = 0.7) +
+  geom_histogram(binwidth = 0.01, fill = "pink", alpha = 0.7) +
   labs(
     title = "Distribution of R-squared",
     x = "R-squared",
