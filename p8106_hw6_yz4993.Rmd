@@ -47,4 +47,37 @@ results_p1 <-
       log(coefs$estimate[1] * coefs$estimate[2])
     })
   )
+
+# 95% confidence intervals
+ci_r_squared <- results_p1 %>% 
+  summarize(ci_low = quantile(r_squared, 0.025), 
+            ci_high = quantile(r_squared, 0.975))
+
+ci_log_beta <- results_p1 %>% 
+  summarize(ci_low = quantile(log_beta, 0.025), 
+            ci_high = quantile(log_beta, 0.975))
+
+# plot distributions
+r_squared_plot <- 
+  results_p1 %>%
+  ggplot(aes(x = r_squared)) +
+  geom_histogram(binwidth = 0.01, fill = "aliceblue", alpha = 0.7) +
+  labs(
+    title = "Distribution of R-squared",
+    x = "R-squared",
+    y = "Frequency"
+  )
+
+log_beta_plot <- 
+  results_p1 %>%
+  ggplot(aes(x = log_beta)) +
+  geom_histogram(binwidth = 0.1, fill = "gold", alpha = 0.7) +
+  labs(
+    title = "Distribution of log(beta_hat_0 * beta_hat_1)",
+    x = "log(beta_hat_0 * beta_hat_1)",
+    y = "Frequency"
+  )
+
+r_squared_plot
+log_beta_plot
 ```
