@@ -102,3 +102,20 @@ homicide_data <- read_csv("~/Desktop/Data Science/HW/HW6/p8105_hw6_yz4993/data/h
   filter(victim_race %in% c("White", "Black")) %>%
   drop_na(victim_race, victim_sex, victim_age)
 ```
+
+```{r analysis for baltimore}
+baltimore <- homicide_data %>%
+  filter(city_state == "Baltimore, MD")
+
+# logistic regression 
+baltimore_glm <- glm(resolved_case ~ victim_age + victim_sex + victim_race, 
+                     data = baltimore, 
+                     family = binomial())
+
+baltimore_results <- baltimore_glm %>%
+  broom::tidy(conf.int = TRUE, exponentiate = TRUE) %>%
+  filter(term == "victim_sexMale") %>%
+  select(term, estimate, conf.low, conf.high)
+
+baltimore_results
+```
