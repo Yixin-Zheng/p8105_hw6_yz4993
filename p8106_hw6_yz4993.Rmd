@@ -163,6 +163,9 @@ city_plot <- city_results %>%
   theme_minimal(base_size = 14)
 city_plot
 ```
+The plot above shows the adjusted odd ratios and the 95% confidence intervals for solving homicides comparing male victims to female victims, organized by odd ratio.
+We see from the plot that most of the cities have OR around 0 to 1 (near 1), which means that they have no significant difference in the rates for solving homicides between different sex. 
+Yet some of the cities have ORs significantly above or below 1(like Albuquerque, NM or Atlanta, CA), suggesting the difference in the rates for solving homicides between different sex. Some cities also have a wide CI, which suggest variability, with some other have narrower one which would give a more precise result.
 
 # Problem 3
 
