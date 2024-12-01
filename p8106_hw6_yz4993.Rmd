@@ -186,7 +186,7 @@ birthweight_data <- birthweight %>%
 ```
 
 ```{r regression}
-proposed_model <- lm(bwt ~ gaweeks + blength + wtgain + bhead + smoken, data = birthweight_data)
+proposed_model <- lm(bwt ~ blength + bhead, data = birthweight_data)
 
 birthweight_data <- birthweight_data %>%
   add_predictions(proposed_model, var = "predicted_bwt") %>%
@@ -203,6 +203,11 @@ ggplot(birthweight_data, aes(x = predicted_bwt, y = residuals)) +
   theme_minimal()
 
 ```
+The proposed regression model was developed to predict the birth weight based on  gestational age in weeks,  baby’s length at birth (centimeteres), and baby’s head circumference at birth (centimeters).
+We chose these predictors because they all related to the physical aspect of the baby, reflecting baby's physical development, and is a continuous numeric variable.
+
+To assess the fit of the model, we calculate residuals and fitted values using functions. The residuals vs. fitted values plot shows the residuals randomly scattered around the horizontal line (0), suggesting that there is no strong evidence of bias in the proposed model, however, we do also observe some patterns, which means that the model might have not capture all the complexities, suggesting future research to include more predictors or do some transformations.
+
 
 ```{r compare}
 model_1 <- lm(bwt ~ blength + gaweeks, data = birthweight_data)
