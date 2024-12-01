@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(rnoaa)
 library(broom)
+library(modelr)
 ```
 
 # Problem 1
@@ -172,4 +173,21 @@ birthweight_data <- birthweight %>%
   ) %>%
   drop_na()
 ```
+```{r regression}
+proposed_model <- lm(bwt ~ gaweeks + blength + wtgain + bhead + smoken, data = birthweight_data)
 
+birthweight_data <- birthweight_data %>%
+  add_predictions(proposed_model, var = "predicted_bwt") %>%
+  add_residuals(proposed_model, var = "residuals")
+
+ggplot(birthweight_data, aes(x = predicted_bwt, y = residuals)) +
+  geom_point(alpha = 0.6) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(
+    title = "residuals vs. fitted values for proposed model",
+    x = "fitted values",
+    y = "residuals"
+  ) +
+  theme_minimal()
+
+```
