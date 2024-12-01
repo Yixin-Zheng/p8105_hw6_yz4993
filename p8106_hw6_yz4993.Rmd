@@ -129,10 +129,47 @@ city_results <- homicide_data %>%
                                 data = .x, 
                                 family = binomial())),
     glm_tidy = map(city_model, ~ broom::tidy(.x, conf.int = TRUE, exponentiate = TRUE)),
-    # Extract results for victim_sexMale
     sex_or = map(glm_tidy, ~ filter(.x, term == "victim_sexMale"))) %>%
   unnest(sex_or) %>%
   select(city_state, estimate, conf.low, conf.high)
+
+
 city_results
+```
+
+```{r plot and organize}
+city_results <- city_results %>%
+  arrange(estimate) %>%
+  mutate(city_state = factor(city_state, levels = city_state))
+
+city_plot <- city_results %>%
+  ggplot(aes(x = city_state, y = estimate)) +
+  geom_point(color = "gold", size = 1.5) +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width = 0.3) +
+  coord_flip() +
+  labs(
+    title = "Adjusted OR and CIs for Male vs Female Victims by City",
+    x = "City",
+    y = "Adjusted Odds Ratio (OR)"
+  ) +
+  theme_minimal(base_size = 14)
+city_plot
+```
+
+# Problem 3
+```{r load and clean data}
+birthweight <- read_csv("~/Desktop/Data Science/HW/HW6/p8105_hw6_yz4993/data/birthweight.csv") %>%
+  janitor::clean_names()
+
+birthweight_data <- birthweight %>%
+  mutate(
+    babysex = factor(babysex, levels = c(1, 2), labels = c("Male", "Female")),
+    frace = factor(frace, levels = c(1, 2, 3, 4, 8), 
+                   labels = c("White", "Black", "Asian", "Puerto Rican", "Other")),
+    mrace = factor(mrace, levels = c(1, 2, 3, 4, 8), 
+                   labels = c("White", "Black", "Asian", "Puerto Rican", "Other")),
+    malform = factor(malform, levels = c(0, 1), labels = c("Absent", "Present"))
+  ) %>%
+  drop_na()
 ```
 
