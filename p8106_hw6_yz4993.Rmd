@@ -119,3 +119,20 @@ baltimore_results <- baltimore_glm %>%
 
 baltimore_results
 ```
+
+```{r analysis for every city}
+city_results <- homicide_data %>%
+  group_by(city_state) %>%
+  nest() %>%
+  mutate(
+    city_model = map(data, ~ glm(resolved_case ~ victim_age + victim_sex + victim_race, 
+                                data = .x, 
+                                family = binomial())),
+    glm_tidy = map(city_model, ~ broom::tidy(.x, conf.int = TRUE, exponentiate = TRUE)),
+    # Extract results for victim_sexMale
+    sex_or = map(glm_tidy, ~ filter(.x, term == "victim_sexMale"))) %>%
+  unnest(sex_or) %>%
+  select(city_state, estimate, conf.low, conf.high)
+city_results
+```
+
