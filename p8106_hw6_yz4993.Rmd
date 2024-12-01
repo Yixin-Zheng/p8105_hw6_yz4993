@@ -191,3 +191,28 @@ ggplot(birthweight_data, aes(x = predicted_bwt, y = residuals)) +
   theme_minimal()
 
 ```
+```{r compare}
+model_1 <- lm(bwt ~ blength + gaweeks, data = birthweight_data)
+model_2 <- lm(bwt ~ bhead * blength * babysex, data = birthweight_data)
+
+cross_validation_data <- crossv_mc(birthweight_data, n = 100)
+
+cross_validation_results <- cross_validation_data %>%
+  mutate(
+    proposed_model = map(train, ~ lm(bwt ~ gaweeks + blength + wtgain + bhead + smoken, data = .x)),
+    model_1 = map(train, ~ lm(bwt ~ blength + gaweeks, data = .x)),
+    model_2 = map(train, ~ lm(bwt ~ bhead * blength * babysex, data = .x)),
+    rmse_proposed = map2_dbl(proposed_model, test, ~ rmse(model = .x, data = .y)),
+    rmse_model_1 = map2_dbl(model_1, test, ~ rmse(model = .x, data = .y)),
+    rmse_model_2 = map2_dbl(model_2, test, ~ rmse(model = .x, data = .y))
+  )
+
+rmse_summary <- cross_validation_results %>%
+  summarise(
+    mean_rmse_proposed = mean(rmse_proposed),
+    mean_rmse_model1 = mean(rmse_model_1),
+    mean_rmse_model2 = mean(rmse_model_2)
+  )
+
+rmse_summary
+```
