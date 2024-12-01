@@ -14,6 +14,7 @@ library(modelr)
 ```
 
 # Problem 1
+
 ```{r download and preprocess data}
 weather_df <- rnoaa::meteo_pull_monitors(
   c("USW00094728"),
@@ -89,7 +90,13 @@ r_squared_plot
 log_beta_plot
 ```
 
+Description of Distributions:
+
+The histogram of R-squared values peaked and centered around 0.91. The distribution is slightly left skewed. The 95% CI, as shown in the summary table, takes the range from 0.894 to 0.927, which means that the model explains approximately 89.4% to 92.7% of data variance in 95% of bootstrap samples.
+The histogram of (log($\beta_0 * \beta_1$)) is sharply peaked and centered around 2.0. The distribution is very concentrated, with only a little variation around 2.0 to 2.1. The 95% CI, as shown in the summary table, takes the range from 1.965 to 2.057.
+
 # Problem 2
+
 ```{r data import and clean}
 homicide_data <- read_csv("~/Desktop/Data Science/HW/HW6/p8105_hw6_yz4993/data/homicide-data.csv") %>%
   janitor::clean_names() %>%
@@ -158,6 +165,7 @@ city_plot
 ```
 
 # Problem 3
+
 ```{r load and clean data}
 birthweight <- read_csv("~/Desktop/Data Science/HW/HW6/p8105_hw6_yz4993/data/birthweight.csv") %>%
   janitor::clean_names()
@@ -173,6 +181,7 @@ birthweight_data <- birthweight %>%
   ) %>%
   drop_na()
 ```
+
 ```{r regression}
 proposed_model <- lm(bwt ~ gaweeks + blength + wtgain + bhead + smoken, data = birthweight_data)
 
@@ -191,6 +200,7 @@ ggplot(birthweight_data, aes(x = predicted_bwt, y = residuals)) +
   theme_minimal()
 
 ```
+
 ```{r compare}
 model_1 <- lm(bwt ~ blength + gaweeks, data = birthweight_data)
 model_2 <- lm(bwt ~ bhead * blength * babysex, data = birthweight_data)
