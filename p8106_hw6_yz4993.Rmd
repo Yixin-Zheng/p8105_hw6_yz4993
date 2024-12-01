@@ -234,3 +234,4 @@ rmse_summary <- cross_validation_results %>%
 
 rmse_summary
 ```
+Looking at the RMSE summary table, we see that the proposed model (mean RMSE = 282.86) is better than the other 2 in terms of accuracy, Model 1, has a highest RMSE (330.67). And Model 2, is also higher with a mean RMSE of 288.05, but this one is not a huge difference. This might suggest over-fitting, more specifically, the added interaction in model 2, may not improve prediction performance. 
